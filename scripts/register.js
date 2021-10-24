@@ -1,7 +1,20 @@
 const { REST } = require("@discordjs/rest");
 const { Routes } = require("discord-api-types/v9");
+const prompt = require("prompt-sync")();
+try {
+	var { token, application_id } = require("../config.json");
+}
+catch {
+	let confignew = {
+		token: prompt("token: ")
+		, application_id: prompt("application_id: ")
+	}
+	const data = JSON.stringify(confignew);
+	fs.writeFileSync('../config.json', data, 'utf8');
+	var token = confignew.token;
+	var application_id = confignew.application_id;
+}
 
-const { token, application_id } = require("../config.json");
 
 const guild = process.argv[2];
 

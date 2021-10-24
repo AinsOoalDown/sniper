@@ -109,3 +109,6 @@ dist
 # other
 .DS_Store
 config.json
+dockerfile
+.dockerignore
+server.js

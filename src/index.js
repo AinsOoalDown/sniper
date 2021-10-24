@@ -1,3 +1,5 @@
+const fs = require('fs');
+const prompt = require("prompt-sync")();
 const { Client, Intents, MessageEmbed } = require("discord.js");
 const client = new Client({
 	intents: [
@@ -7,8 +9,19 @@ const client = new Client({
 	],
 	partials: ["MESSAGE", "REACTION", "USER"],
 });
-const { token } = require("../config.json");
+try {
+	var { token } = require("../config.json");
+}
+catch {
+	let confignew = {
+		token: prompt("token: ")
+		, application_id: prompt("application_id: ")
+	}
 
+	const data = JSON.stringify(confignew);
+	fs.writeFileSync('../config.json', data, 'utf8');
+	var token = confignew.token;
+}
 const snipes = {};
 const editSnipes = {};
 const reactionSnipes = {};
@@ -82,14 +95,14 @@ client.on("interactionCreate", async (interaction) => {
 		await interaction.reply(
 			snipe
 				? {
-						embeds: [
-							new MessageEmbed()
-								.setDescription(snipe.content)
-								.setAuthor(snipe.author.tag)
-								.setFooter(`#${channel.name}`)
-								.setTimestamp(snipe.createdAt),
-						],
-				  }
+					embeds: [
+						new MessageEmbed()
+							.setDescription(snipe.content)
+							.setAuthor(snipe.author.tag)
+							.setFooter(`#${channel.name}`)
+							.setTimestamp(snipe.createdAt),
+					],
+				}
 				: "There's nothing to snipe!"
 		);
 	} else if (interaction.commandName === "reactionsnipe") {
@@ -98,18 +111,18 @@ client.on("interactionCreate", async (interaction) => {
 		await interaction.reply(
 			snipe
 				? {
-						embeds: [
-							new MessageEmbed()
-								.setDescription(
-									`reacted with ${formatEmoji(
-										snipe.emoji
-									)} on [this message](${snipe.messageURL})`
-								)
-								.setAuthor(snipe.user.tag)
-								.setFooter(`#${channel.name}`)
-								.setTimestamp(snipe.createdAt),
-						],
-				  }
+					embeds: [
+						new MessageEmbed()
+							.setDescription(
+								`reacted with ${formatEmoji(
+									snipe.emoji
+								)} on [this message](${snipe.messageURL})`
+							)
+							.setAuthor(snipe.user.tag)
+							.setFooter(`#${channel.name}`)
+							.setTimestamp(snipe.createdAt),
+					],
+				}
 				: "There's nothing to snipe!"
 		);
 	}
